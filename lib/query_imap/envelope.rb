@@ -22,7 +22,7 @@ class QueryIMAP
 					@address = "#{address.mailbox}@#{address.host}"
 					@display_name = address.name
 				elsif address.is_a?(String)
-					_,@display_name,@address = address.scan(/((.*)\s*<(.+)>|(.{0})(.+))/)[0].compact
+					@display_name,@address = address.scan(/(?:From:\s)?(?:(.*?)\s*<([^>]*?)\s*>|(.{0})(.+))/)[0].compact
 				else
 					raise InvalidAddress
 				end
