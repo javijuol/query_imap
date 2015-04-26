@@ -52,7 +52,7 @@ class QueryIMAP
 			message = Message.new(self)
 			@with.each do |with|
 				case with
-					when RFC822
+					when MESSAGE
 						# message = fetched.attr[with] #TODO
 					when FLAGS
 						message.flags = fetched.attr[with]
@@ -69,7 +69,7 @@ class QueryIMAP
 					when SUBJECT
 						message.subject = fetched.attr[with].gsub(/^Subject:\s/i,'').chomp('')
 					when FROM
-						message.from = Address.new(fetched.attr[with])
+						message.from = Message::Address.new(fetched.attr[with])
 					else
 				end
 			end
