@@ -52,7 +52,7 @@ class QueryIMAP
 			message = Message.new(self)
 			@with.each do |with|
 				case with
-					when MESSAGE
+          when MESSAGE
 						# message = fetched.attr[with] #TODO
 					when FLAGS
 						message.flags = fetched.attr[with]
@@ -61,15 +61,15 @@ class QueryIMAP
 					when ENVELOPE
 						message.envelope = fetched.attr[with]['ENVELOPE']
 					when MESSAGE_ID
-						message.message_id = fetched.attr[with][/.*<([^>]*)/,1]
+						message.message_id = message.fetch_message_id fetched.attr[with]
 					when SIZE
 						message.size = fetched.attr[with]
 					when DATE
-						message.date = DateTime.parse(fetched.attr['BODY[HEADER.FIELDS (DATE)]'].nil? ? fetched.attr['BODY[HEADER.FIELDS (DATE)]'].gsub(/^Date:\s/i,'').chomp('') : fetched.attr['INTERNALDATE'])
+						message.date = DateTime.parse(fetched.attr['BODY[HEADER.FIELDS (DATE)]'].nil? ? message.fetch_date(fetched.attr['BODY[HEADER.FIELDS (DATE)]']) : fetched.attr['INTERNALDATE'])
 					when SUBJECT
-						message.subject = fetched.attr[with].gsub(/^Subject:\s/i,'').chomp('')
+						message.subject = message.fetch_subject(fetched.attr[with])
 					when FROM
-						message.from = Message::Address.new(fetched.attr[with])
+						message.from = message.fetch_addres(fetched.attr[with])
 					else
 				end
 			end
